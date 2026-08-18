@@ -1,0 +1,39 @@
+apiVersion: template.kubevirt.io/v1beta1
+kind: VirtualMachineTemplate
+metadata:
+  name: test
+  namespace: default
+spec:
+  virtualMachine:
+    apiVersion: kubevirt.io/v1
+    kind: VirtualMachine
+    metadata:
+      name: my-vm
+    spec:
+      dataVolumeTemplates:
+        - metadata:
+            name: my-dvt
+          spec:
+            source:
+              pvc:
+                name: source-pvc
+            storage:
+              resources:
+                requests:
+                  storage: 1Gi
+      template:
+        spec:
+          domain:
+            devices:
+              disks:
+                - disk:
+                    bus: virtio
+                  name: datavolumedisk
+            resources:
+              requests:
+                memory: 512Mi
+          volumes:
+            - dataVolume:
+                name: my-dvt
+              name: datavolumedisk
+

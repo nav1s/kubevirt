@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: suspendable-job
+spec:
+  completions: 10
+  parallelism: 2
+  suspend: false
+  template:
+    spec:
+      containers:
+      - name: worker
+        image: busybox:1.36
+        command: ["sh", "-c", "echo Working on task && sleep 10"]
+      restartPolicy: Never

@@ -104,13 +104,21 @@ func (s *VMTemplateSource) ManifestData() (key string, data []byte, extra map[st
 	}
 
 	out := s.tpl.DeepCopy()
+  dat, _ := json.MarshalIndent(out, "", "  ")
+	log.Log.V(1).Infof("original out: %s", dat)
 	out.Status = v1beta1.VirtualMachineTemplateStatus{}
+  dat, _ = json.MarshalIndent(out, "", "  ")
+	log.Log.V(1).Infof("out after status cleanup: %s", dat)
 	out.ManagedFields = nil
 	cleanedObjectMeta := metav1.ObjectMeta{}
 	cleanedObjectMeta.Name = out.ObjectMeta.Name
 	cleanedObjectMeta.Labels = out.ObjectMeta.Labels
 	cleanedObjectMeta.Annotations = out.ObjectMeta.Annotations
-	out.ObjectMeta = cleanedObjectMeta
+  dat, _ = json.MarshalIndent(cleanedObjectMeta, "", "  ")
+  log.Log.V(1).Infof("cleanedObjectMeta: %s", dat)
+
+  dat, _ = json.MarshalIndent(out, "", "  ")
+	log.Log.V(1).Infof("out after ObjectMeta cleanup: %s", dat)
 
 	if out.Spec.VirtualMachine != nil && out.Spec.VirtualMachine.Raw != nil {
 		rewritten, err := rewriteEmbeddedVM(&out.Spec, s.tpl.Namespace)
@@ -361,14 +369,21 @@ func rewriteEmbeddedVM(spec *v1beta1.VirtualMachineTemplateSpec, namespace strin
 	if err := json.Unmarshal(spec.VirtualMachine.Raw, &obj); err != nil {
 		return nil, fmt.Errorf("error unmarshalling embedded VM: %w", err)
 	}
+  objBytes, _ := json.MarshalIndent(obj, "", "  ")
+  log.Log.V(2).Infof("abv original obj: %s", objBytes)
+
 
 	if err := rewriteDataVolumeTemplates(obj, spec.Parameters, namespace); err != nil {
 		return nil, fmt.Errorf("error rewriting dataVolumeTemplates: %w", err)
 	}
+  objBytes, _ = json.MarshalIndent(obj, "", "  ")
+  log.Log.V(2).Infof("abv dvt rewritten obj: %s", objBytes)
 
 	if err := rewriteVolumes(obj, spec.Parameters); err != nil {
 		return nil, fmt.Errorf("error rewriting volumes: %w", err)
 	}
+  objBytes, _ = json.MarshalIndent(obj, "", "  ")
+  log.Log.V(2).Infof("abv volumes rewritten obj: %s", objBytes)
 
 	rewritten, err := json.Marshal(obj)
 	if err != nil {

@@ -1,0 +1,49 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: example-vm
+spec:
+  runStrategy: Halted
+  dataVolumeTemplates:
+  - metadata:
+      name: example-dv
+    spec:
+      storage:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 20Gi
+      source:
+        registry:
+          url: docker://quay.io/containerdisks/centos-stream:9
+          pullMethod: node
+  template:
+    metadata:
+      labels:
+        kubevirt.io/vm: example-vm
+    spec:
+      domain:
+        devices:
+          disks:
+          - disk:
+              bus: virtio
+            name: datavolumedisk1
+          - disk:
+              bus: virtio
+            name: cloudinit
+        resources:
+          requests:
+            memory: 2Gi
+      terminationGracePeriodSeconds: 0
+      volumes:
+      - dataVolume:
+          name: example-dv
+        name: datavolumedisk1
+      - cloudInitNoCloud:
+          userData: |
+            #cloud-config
+            password: changeme
+            chpasswd:
+              expire: false
+        name: cloudinit

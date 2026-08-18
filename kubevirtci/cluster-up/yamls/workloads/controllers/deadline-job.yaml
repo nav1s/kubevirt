@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: deadline-job
+spec:
+  activeDeadlineSeconds: 10
+  template:
+    spec:
+      containers:
+      - name: slow
+        image: busybox:1.36
+        command: ["sh", "-c", "echo Starting && sleep 5"]
+      restartPolicy: Never
