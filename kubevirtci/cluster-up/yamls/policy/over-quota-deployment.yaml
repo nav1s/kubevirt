@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: over-quota
+  namespace: quota-demo
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: over-quota
+  template:
+    metadata:
+      labels:
+        app: over-quota
+    spec:
+      containers:
+      - name: app
+        image: nginx:1.27
+        resources:
+          requests:
+            cpu: "250m"
+            memory: 256Mi
+          limits:
+            cpu: "500m"
+            memory: 512Mi

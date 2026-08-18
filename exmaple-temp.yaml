@@ -1,0 +1,56 @@
+apiVersion: template.kubevirt.io/v1beta1
+kind: VirtualMachineTemplate
+metadata:
+  name: fedora-template
+spec:
+  parameters:
+    - name: NAME
+      generate: expression
+      from: "fedora-[a-z0-9]{16}"
+      description: Unique VM name
+    - name: INSTANCETYPE
+      value: u1.small
+      description: Instance type for the VM
+    - name: PASSWORD
+      required: true
+      description: Password for the cloud-init user
+  virtualMachine:
+    metadata:
+      name: ${NAME}
+    spec:
+      dataVolumeTemplates:
+      - metadata:
+          name: dvv
+        spec:
+          storage:
+            accessModes:
+            - ReadWriteOnce
+            resources:
+              requests:
+                storage: 20Gi
+          source:
+            registry:
+              url: docker://quay.io/containerdisks/centos-stream:9
+              pullMethod: node
+      instancetype:
+        kind: VirtualMachineClusterInstancetype
+        name: ${INSTANCETYPE}
+      preference:
+        kind: VirtualMachineClusterPreference
+        name: fedora
+      runStrategy: Halted
+      template:
+        spec:
+          domain:
+            devices: { }
+          volumes:
+            - datavolume:
+                name: dvv
+              name: rootdisk
+            - cloudInitNoCloud:
+                userData: |-
+                  #cloud-config
+                  user: fedora
+                  password: ${PASSWORD}
+                  chpasswd: { expire: False }
+              name: cloudinitdisk

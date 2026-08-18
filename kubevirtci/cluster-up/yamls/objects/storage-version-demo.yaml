@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storage-version-demo
+  labels:
+    app: storage-version-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: storage-version-demo
+  template:
+    metadata:
+      labels:
+        app: storage-version-demo
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.27
+        ports:
+        - containerPort: 80
+

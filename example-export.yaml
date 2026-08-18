@@ -1,0 +1,10 @@
+apiVersion: export.kubevirt.io/v1beta1
+kind: VirtualMachineExport
+metadata:
+  name: example-export
+spec:
+  # tokenSecretRef: example-token
+  source:
+    apiGroup: "kubevirt.io"
+    kind: VirtualMachine
+    name: example-vm
