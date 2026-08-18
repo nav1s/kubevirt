@@ -1,0 +1,180 @@
+abv original obj: {
+  "apiVersion": "kubevirt.io/v1",
+  "kind": "VirtualMachine",
+  "metadata": {
+    "name": "my-vm"
+  },
+  "spec": {
+    "dataVolumeTemplates": [
+      {
+        "metadata": {
+          "name": "my-dvt"
+        },
+        "spec": {
+          "source": {
+            "pvc": {
+              "name": "source-pvc"
+            }
+          },
+          "storage": {
+            "resources": {
+              "requests": {
+                "storage": "1Gi"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "runStrategy": "Halted",
+    "template": {
+      "spec": {
+        "domain": {
+          "devices": {
+            "disks": [
+              {
+                "disk": {
+                  "bus": "virtio"
+                },
+                "name": "datavolumedisk"
+              }
+            ]
+          },
+          "resources": {
+            "requests": {
+              "memory": "512Mi"
+            }
+          }
+        },
+        "volumes": [
+          {
+            "dataVolume": {
+              "name": "my-dvt"
+            },
+            "name": "datavolumedisk"
+          }
+        ]
+      }
+    }
+  }
+}
+abv dvt rewritten obj: {
+  "apiVersion": "kubevirt.io/v1",
+  "kind": "VirtualMachine",
+  "metadata": {
+    "name": "my-vm"
+  },
+  "spec": {
+    "dataVolumeTemplates": [
+      {
+        "metadata": {
+          "name": "my-dvt"
+        },
+        "spec": {
+          "source": {
+            "pvc": {
+              "name": "source-pvc"
+            }
+          },
+          "storage": {
+            "resources": {
+              "requests": {
+                "storage": "1Gi"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "runStrategy": "Halted",
+    "template": {
+      "spec": {
+        "domain": {
+          "devices": {
+            "disks": [
+              {
+                "disk": {
+                  "bus": "virtio"
+                },
+                "name": "datavolumedisk"
+              }
+            ]
+          },
+          "resources": {
+            "requests": {
+              "memory": "512Mi"
+            }
+          }
+        },
+        "volumes": [
+          {
+            "dataVolume": {
+              "name": "my-dvt"
+            },
+            "name": "datavolumedisk"
+          }
+        ]
+      }
+    }
+  }
+}
+abv volumes rewritten obj: {
+  "apiVersion": "kubevirt.io/v1",
+  "kind": "VirtualMachine",
+  "metadata": {
+    "name": "my-vm"
+  },
+  "spec": {
+    "dataVolumeTemplates": [
+      {
+        "metadata": {
+          "name": "my-dvt"
+        },
+        "spec": {
+          "source": {
+            "pvc": {
+              "name": "source-pvc"
+            }
+          },
+          "storage": {
+            "resources": {
+              "requests": {
+                "storage": "1Gi"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "runStrategy": "Halted",
+    "template": {
+      "spec": {
+        "domain": {
+          "devices": {
+            "disks": [
+              {
+                "disk": {
+                  "bus": "virtio"
+                },
+                "name": "datavolumedisk"
+              }
+            ]
+          },
+          "resources": {
+            "requests": {
+              "memory": "512Mi"
+            }
+          }
+        },
+        "volumes": [
+          {
+            "dataVolume": {
+              "name": "my-dvt"
+            },
+            "name": "datavolumedisk"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-demo
+spec:
+  containers:
+  - name: app
+    image: busybox:1.28
+    command: ['sh', '-c', 'echo "Persistent data" > /data/hello.txt && cat /data/hello.txt && sleep 3600']
+    volumeMounts:
+    - mountPath: /data
+      name: my-storage
+  volumes:
+  - name: my-storage
+    persistentVolumeClaim:
+      claimName: demo-pvc

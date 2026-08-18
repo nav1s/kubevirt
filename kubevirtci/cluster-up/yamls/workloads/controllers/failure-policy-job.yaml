@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: failure-policy-job
+spec:
+  completions: 3
+  parallelism: 3
+  backoffLimit: 6
+  podFailurePolicy:
+    rules:
+    - action: FailJob
+      onExitCodes:
+        containerName: main
+        operator: In
+        values: [42]
+    - action: Ignore
+      onPodConditions:
+      - type: DisruptionTarget
+  template:
+    spec:
+      containers:
+      - name: main
+        image: bash:5
+        command: ["bash", "-c", "echo Working && sleep 2 && exit 42"]
+      restartPolicy: Never

@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: per-index-backoff
+spec:
+  completions: 10
+  parallelism: 3
+  completionMode: Indexed
+  backoffLimitPerIndex: 1
+  maxFailedIndexes: 5
+  template:
+    spec:
+      containers:
+      - name: worker
+        image: python:3.11-slim
+        command:
+        - python3
+        - -c
+        - |
+          import os, sys
+          index = int(os.environ.get("JOB_COMPLETION_INDEX"))
+          if index % 2 == 0:
+            print(f"Index {index} succeeded")
+            sys.exit(0)
+          else:
+            print(f"Index {index} failed")
+            sys.exit(1)
+      restartPolicy: Never

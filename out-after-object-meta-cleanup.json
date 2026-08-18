@@ -1,0 +1,75 @@
+{
+  "metadata": {
+    "name": "test-template",
+    "namespace": "default",
+    "uid": "c6ee7262-c575-4ca8-b998-c595d7934232",
+    "resourceVersion": "49334",
+    "generation": 1,
+    "creationTimestamp": "2026-09-14T08:29:34Z",
+    "annotations": {
+      "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"template.kubevirt.io/v1beta1\",\"kind\":\"VirtualMachineTemplate\",\"metadata\":{\"annotations\":{},\"name\":\"test-template\",\"namespace\":\"default\"},\"spec\":{\"virtualMachine\":{\"apiVersion\":\"kubevirt.io/v1\",\"kind\":\"VirtualMachine\",\"metadata\":{\"name\":\"my-vm\"},\"spec\":{\"dataVolumeTemplates\":[{\"metadata\":{\"name\":\"my-dvt\"},\"spec\":{\"source\":{\"pvc\":{\"name\":\"source-pvc\"}},\"storage\":{\"resources\":{\"requests\":{\"storage\":\"1Gi\"}}}}}],\"runStrategy\":\"Halted\",\"template\":{\"spec\":{\"domain\":{\"devices\":{\"disks\":[{\"disk\":{\"bus\":\"virtio\"},\"name\":\"datavolumedisk\"}]},\"resources\":{\"requests\":{\"memory\":\"512Mi\"}}},\"volumes\":[{\"dataVolume\":{\"name\":\"my-dvt\"},\"name\":\"datavolumedisk\"}]}}}}}}\n"
+    }
+  },
+  "spec": {
+    "virtualMachine": {
+      "apiVersion": "kubevirt.io/v1",
+      "kind": "VirtualMachine",
+      "metadata": {
+        "name": "my-vm"
+      },
+      "spec": {
+        "dataVolumeTemplates": [
+          {
+            "metadata": {
+              "name": "my-dvt"
+            },
+            "spec": {
+              "source": {
+                "pvc": {
+                  "name": "source-pvc"
+                }
+              },
+              "storage": {
+                "resources": {
+                  "requests": {
+                    "storage": "1Gi"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "runStrategy": "Halted",
+        "template": {
+          "spec": {
+            "domain": {
+              "devices": {
+                "disks": [
+                  {
+                    "disk": {
+                      "bus": "virtio"
+                    },
+                    "name": "datavolumedisk"
+                  }
+                ]
+              },
+              "resources": {
+                "requests": {
+                  "memory": "512Mi"
+                }
+              }
+            },
+            "volumes": [
+              {
+                "dataVolume": {
+                  "name": "my-dvt"
+                },
+                "name": "datavolumedisk"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: emptydir-demo
+spec:
+  containers:
+  - name: writer
+    image: busybox:1.28
+    command: ['sh', '-c', 'echo "Hello from writer" > /cache/message.txt && sleep 3600']
+    volumeMounts:
+    - mountPath: /cache
+      name: cache-volume
+  - name: reader
+    image: busybox:1.28
+    command: ['sh', '-c', 'sleep 5 && cat /cache/message.txt && sleep 3600']
+    volumeMounts:
+    - mountPath: /cache
+      name: cache-volume
+  volumes:
+  - name: cache-volume
+    emptyDir:
+      sizeLimit: 500Mi
+      medium: Memory
